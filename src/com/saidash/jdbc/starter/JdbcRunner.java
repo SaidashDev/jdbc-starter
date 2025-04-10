@@ -12,10 +12,8 @@ public class JdbcRunner {
     public static void main(String[] args) throws SQLException {
 
         String sql = """
-                UPDATE info  
-                SET data = 'TestTest'
-                WHERE id = 5
-                RETURNING *
+                SELECT * 
+                FROM ticket 
                 """;
 
         try (var connection = ConnectionManager.open();
@@ -25,9 +23,13 @@ public class JdbcRunner {
             System.out.println(connection.getSchema());
 
 
-            var executeResult = statement.execute(sql);
-            System.out.println(executeResult);
-            System.out.println(statement.getUpdateCount());
+            var executeResult = statement.executeQuery(sql);
+            while (executeResult.next()){
+                System.out.println(executeResult.getLong("id"));
+                System.out.println(executeResult.getString("passenger_name"));
+                System.out.println(executeResult.getBigDecimal("cost"));
+                System.out.println("------------------------");
+            }
 
         }
     }
