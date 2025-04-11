@@ -33,6 +33,11 @@ public class JdbcRunner {
         try (var connection = ConnectionManager.open();
              var preparedStatement = connection.prepareStatement(sql)) {
 
+            // Java прил будет доставать по 50 строк за раз
+            preparedStatement.setFetchSize(50); //ограничение на 1 сетевой round-trip (запрос),
+            preparedStatement.setQueryTimeout(10);
+            preparedStatement.setMaxRows(100); // ограничение на весь ResultSet
+
             System.out.println(preparedStatement);
             preparedStatement.setTimestamp(1, Timestamp.valueOf(start));
             System.out.println(preparedStatement);
