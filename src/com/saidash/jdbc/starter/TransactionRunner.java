@@ -5,36 +5,29 @@ import com.saidash.jdbc.starter.util.ConnectionManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class TransactionRunner {
 
     public static void main(String[] args) throws SQLException {
 
         long flightId = 8;
-        var deleteFlightSql = "DELETE FROM flight WHERE id = ?";
-        var deleteTicketsSql = "DELETE FROM ticket WHERE flight_id = ?";
-
+        var deleteFlightSql = "DELETE FROM flight WHERE id = " + flightId;
+        var deleteTicketsSql = "DELETE FROM ticket WHERE flight_id = " + flightId;
         Connection connection = null;
-        PreparedStatement deleteFlightStatement = null;
-        PreparedStatement deleteTicketsStatement = null;
+        Statement statement = null;
 
         try {
             connection = ConnectionManager.open();
-            deleteFlightStatement = connection.prepareStatement(deleteFlightSql);
-            deleteTicketsStatement = connection.prepareStatement(deleteTicketsSql);
-
             connection.setAutoCommit(false);
 
-            deleteTicketsStatement.setLong(1, flightId);
-            deleteFlightStatement.setLong(1, flightId);
+            //Для batch-запросов prepared statement не подходит!!!
+            statement = connection.createStatement();
 
-            deleteTicketsStatement.executeUpdate();
+            statement.addBatch(deleteTicketsSql);
+            statement.addBatch(deleteFlightSql);
 
-            if(true){
-                throw new RuntimeException("Ooops"); //Из-за этого произойдет откат
-            }
-
-            deleteFlightStatement.executeUpdate();
+            var ints = statement.executeBatch();
 
             connection.commit();
 
@@ -47,11 +40,8 @@ public class TransactionRunner {
             if (connection != null) {
                 connection.close();
             }
-            if (deleteFlightStatement != null) {
-                deleteFlightStatement.close();
-            }
-            if (deleteTicketsStatement != null) {
-                deleteTicketsStatement.close();
+            if (statement != null) {
+               statement.close();
             }
 
         }
