@@ -18,7 +18,7 @@ public class TransactionRunner {
         Statement statement = null;
 
         try {
-            connection = ConnectionManager.open();
+            connection = ConnectionManager.get();
             connection.setAutoCommit(false);
 
             //Для batch-запросов prepared statement не подходит!!!

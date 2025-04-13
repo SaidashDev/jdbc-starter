@@ -29,7 +29,7 @@ public class BlobRunner {
                 WHERE id = ?
                 """;
 
-        try (var connection = ConnectionManager.open();
+        try (var connection = ConnectionManager.get();
              var statement = connection.prepareStatement(sql)) {
             statement.setInt(1, 1);
             var resultSet = statement.executeQuery();
@@ -47,7 +47,7 @@ public class BlobRunner {
                 SET image = ?
                 Where id = 1
                 """;
-        try (var connection = ConnectionManager.open();
+        try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setBytes(1, Files.readAllBytes(Path.of("resources", "boing777.jpg")));
             preparedStatement.executeUpdate();

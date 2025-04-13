@@ -11,15 +11,14 @@ import java.util.List;
 
 public class JdbcRunner {
     public static void main(String[] args) throws SQLException {
-        
-//        Long flightId = 2L; // SQL-injection
-//        var result = getTicketsByFlightId(flightId);
-//        System.out.println(result);
 
-//        var result = getFlightsBetween(LocalDate.of(2020, 10, 1).atStartOfDay(), LocalDateTime.now());
-//        System.out.println(result);
+        //В самом конце нужно закрывать pool соединений
+        try{
+            checkMetaData();
+        } finally {
+            ConnectionManager.closePool();
+        }
 
-        checkMetaData();
 
 
 
@@ -27,7 +26,7 @@ public class JdbcRunner {
 
     private static void checkMetaData() throws SQLException {
 
-        try (var connection = ConnectionManager.open()) {
+        try (var connection = ConnectionManager.get()) {
             var metaData = connection.getMetaData();
             var catalogs = metaData.getCatalogs();
             while (catalogs.next()){
@@ -65,7 +64,7 @@ public class JdbcRunner {
                 WHERE departure_date BETWEEN ? AND ?                
                 """;
         List<Long> result = new ArrayList<>();
-        try (var connection = ConnectionManager.open();
+        try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(sql)) {
 
             // Java прил будет доставать по 50 строк за раз
@@ -101,7 +100,7 @@ public class JdbcRunner {
 
         List<Long> result = new ArrayList<>();
 
-        try (var connection = ConnectionManager.open();
+        try (var connection = ConnectionManager.get();
              var preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setLong(1, flightId);
