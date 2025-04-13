@@ -2,6 +2,7 @@ package com.saidash.jdbc.starter;
 
 import com.saidash.jdbc.starter.dao.TicketDao;
 import com.saidash.jdbc.starter.entity.Ticket;
+import dto.TicketFilter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -9,10 +10,15 @@ import java.util.Optional;
 
 public class DaoRunner {
     public static void main(String[] args) {
-        var tickets = TicketDao.getInstance().findAll();
+
+        var ticketFilter = new TicketFilter(3, 2, null, "A1");
+        var tickets = TicketDao.getInstance().findAll(ticketFilter);
         System.out.println(tickets);
 
+
     }
+
+
 
     private static void updateTest() {
         var ticketDao = TicketDao.getInstance();
