@@ -6,18 +6,18 @@ public class Ticket {
     private Long id;
     private String passengerNo;
     private String passengerName;
-    private Long flightId; //По хорошему, надо сделать ссылку на entity(flight), поскольку данное поле - foreign key
+    private Flight flight;
     private String seatNo;
     private BigDecimal cost;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, String passengerNo, String passengerName, Long flightId, String seatNo, BigDecimal cost) {
+    public Ticket(Long id, String passengerNo, String passengerName, Flight flight, String seatNo, BigDecimal cost) {
         this.id = id;
         this.passengerNo = passengerNo;
         this.passengerName = passengerName;
-        this.flightId = flightId;
+        this.flight = flight;
         this.seatNo = seatNo;
         this.cost = cost;
     }
@@ -46,12 +46,12 @@ public class Ticket {
         this.passengerName = passengerName;
     }
 
-    public Long getFlightId() {
-        return flightId;
+    public Flight getFlight() {
+        return flight;
     }
 
-    public void setFlightId(Long flightId) {
-        this.flightId = flightId;
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     public String getSeatNo() {
@@ -73,13 +73,13 @@ public class Ticket {
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + id +
-                ", passengerNo='" + passengerNo + '\'' +
-                ", passengerName='" + passengerName + '\'' +
-                ", flightId=" + flightId +
-                ", seatNo='" + seatNo + '\'' +
-                ", cost=" + cost +
-                '}';
+               "id=" + id +
+               ", passengerNo='" + passengerNo + '\'' +
+               ", passengerName='" + passengerName + '\'' +
+               ", flight=" + flight +
+               ", seatNo='" + seatNo + '\'' +
+               ", cost=" + cost +
+               '}';
     }
 
 
